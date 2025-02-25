@@ -1,10 +1,11 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef} from "react";
 
 function App() {
   const [length, setLength] = useState(8);
   const [numAllowed, setNumAllowed] = useState(false);
   const [charAllowed, setCharAllowed] = useState(false);
   const [password, setPassword] = useState("");
+  const passwordRef = useRef(null)
 
   const passwordGenerator = useCallback(() => {
     let pass = "";
@@ -18,13 +19,21 @@ function App() {
       str += "!@#$%^&*()_-+={}[]|:;<>,.?/";
     }
 
-    for (let i = 1; i < array.length; i++) {
+    for (let i = 1; i <= length; i++) {
       let char = Math.floor(Math.random() * str.length + 1);
-      pass = str.charAt(char);
+      pass += str.charAt(char);
     }
 
     setPassword(pass);
   }, [length, numAllowed, charAllowed, setPassword]);
+
+  const copyOnClipBoard = useCallback(() =>{
+    window.navigator.clipboard.writeText(password)
+  },[password])
+
+  useEffect(() => {
+    passwordGenerator()
+  }, [length, numAllowed, charAllowed, passwordGenerator])
 
   return (
     <>
@@ -39,8 +48,11 @@ function App() {
             className="outline-none w-full py-2 px-3 bg-[#fff]"
             placeholder="Password"
             readOnly
+            ref={passwordRef}
           />
-          <button className="outline-none bg-blue-700 text-white px-3 py-1 shrink-0 cursor-pointer">
+          <button 
+          onClick={copyOnClipBoard}
+          className="outline-none bg-blue-700 text-white px-3 py-1 shrink-0 cursor-pointer">
             copy
           </button>
         </div>
@@ -48,7 +60,7 @@ function App() {
           <div className="flex items-center gap-x-1">
             <input
               type="range"
-              min={6}
+              min={8}
               max={100}
               value={length}
               className="cursor-pointer"
