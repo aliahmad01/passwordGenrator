@@ -5,6 +5,7 @@ function App() {
   const [numAllowed, setNumAllowed] = useState(false);
   const [charAllowed, setCharAllowed] = useState(false);
   const [password, setPassword] = useState("");
+  const [copy, setCopy] = useState("copy")
   const passwordRef = useRef(null)
 
   const passwordGenerator = useCallback(() => {
@@ -53,14 +54,14 @@ function App() {
           <button 
           onClick={copyOnClipBoard}
           className="outline-none bg-blue-700 text-white px-3 py-1 shrink-0 cursor-pointer">
-            copy
+            {copy}
           </button>
         </div>
         <div className="flex text-base gap-x-2">
           <div className="flex items-center gap-x-1">
             <input
               type="range"
-              min={8}
+              min={6}
               max={100}
               value={length}
               className="cursor-pointer"
